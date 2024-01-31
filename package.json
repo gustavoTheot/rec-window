@@ -1,7 +1,7 @@
 {
   "name": "record",
   "private": true,
-  "homepage": "https://gustavoTheot.github.io/rec-window.git",
+  "homepage": "https://gustavoTheot.github.io/rec-window",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
