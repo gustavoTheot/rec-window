@@ -1,30 +1,36 @@
-# React + TypeScript + Vite
+# Rec windows 📹
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Você gostaria de gravar facilmente sua tela diretamente do seu navegador? Então, através dessa aplicação você pode fazer isso!
 
-Currently, two official plugins are available:
+## Executando a Aplicação 📦
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Pré-requisitos
 
-## Expanding the ESLint configuration
+**OBS:** Antes de começar, certifique-se de clonar o repositório para prosseguir com os próximos passos.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Instalando
 
-- Configure the top-level `parserOptions` property like this:
+1. Abra o repositório clonado no seu editor de código preferido (VSCode, etc...).
+2. Execute o seguinte comando no terminal para instalar as dependências (certifique-se de ter o Node.js instalado na sua máquina):
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Iniciando a Aplicação
+
+Após concluir os passos anteriores, inicie a aplicação executando o seguinte comando:
+
+```bash
+npm run dev
+```
+
+## Ferramentas Utilizadas 🛠️
+
+A aplicação foi construída utilizando as seguintes tecnologias:
+
+- React.js
+- Typescript
+- eslint
+- gh-pages
+- MediaRecorder
