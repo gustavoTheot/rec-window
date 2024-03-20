@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyles = createGlobalStyle`
     *{
@@ -15,10 +15,7 @@ export const GlobalStyles = createGlobalStyle`
 `
 
 export const AppContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
-

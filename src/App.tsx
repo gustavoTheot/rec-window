@@ -1,17 +1,14 @@
-import { AppContainer, GlobalStyles } from './AppStyle';
-import { Recording } from './page/Rec';
+import { AppContainer, GlobalStyles } from './AppStyle'
+import { Recording } from './page/Rec'
 
 function App() {
-
   return (
     <>
-      <GlobalStyles/>
+      <GlobalStyles />
       <AppContainer>
-        <Recording/>
+        <Recording />
       </AppContainer>
     </>
-   
-   
   )
 }
 

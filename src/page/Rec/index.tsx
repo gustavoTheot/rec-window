@@ -6,7 +6,7 @@ import {
   Play,
   VideoCameraSlash,
 } from 'phosphor-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Container,
   Header,
@@ -21,36 +21,58 @@ import {
 export function Recording() {
   const [isRecording, setIsRecording] = useState<boolean>(false)
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
+  const [realTimeStream, setRealTimeStream] = useState<MediaStream | null>(null)
+  const realTimeVideoRef = useRef<HTMLVideoElement>(null)
+
   const [videoUrl, setVideoUrl] = useState<string | null>()
   const [mediaList, setMediaList] = useState<string[]>([])
   const [recCount, setRecCount] = useState(0)
 
   useEffect(() => {
-    if (mediaRecorder) {
+    if (mediaRecorder && realTimeVideoRef.current) {
       mediaRecorder.addEventListener('dataavailable', (e) => {
         const uri = URL.createObjectURL(e.data)
-        setVideoUrl(uri)
+        setVideoUrl(uri) // Atualiza o estado para a última gravação completa
       })
+
+      realTime()
 
       mediaRecorder.addEventListener('stop', () => {
         setMediaRecorder(null)
         setIsRecording(false)
-        setRecCount((pre) => pre + 1)
+        setRecCount((prev) => prev + 1)
       })
     }
   }, [mediaRecorder, isRecording])
 
+  function realTime() {
+    navigator.mediaDevices
+      .getDisplayMedia({ video: true, audio: true })
+      .then((mediaStream) => {
+        if (realTimeVideoRef.current) {
+          realTimeVideoRef.current.srcObject = mediaStream
+          setRealTimeStream(mediaStream)
+
+          mediaRecorder?.start()
+        }
+      })
+  }
+
   async function rec() {
     if (!isRecording && navigator.mediaDevices) {
       const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
+        video: {
+          width: 1920,
+          height: 1080,
+          frameRate: 30,
+        },
         audio: true,
       })
 
-      const mediaRecorder = new MediaRecorder(stream)
-      setMediaRecorder(mediaRecorder)
+      const media = new MediaRecorder(stream)
+      setMediaRecorder(media)
 
-      mediaRecorder.start()
+      media.start()
       setIsRecording(true)
     }
   }
@@ -107,6 +129,17 @@ export function Recording() {
       </Header>
 
       <Main>
+        {isRecording && (
+          <VideoView>
+            <video
+              ref={realTimeVideoRef}
+              autoPlay
+              muted
+              width={'400px'}
+            ></video>
+          </VideoView>
+        )}
+
         {videoUrl && (
           <VideoView>
             <video src={videoUrl} controls width={'400px'}></video>
@@ -155,7 +188,7 @@ export function Recording() {
         ) : (
           <ListZero>
             <Inform>
-              <span>Sua lista de gração está vazia</span>
+              <span>Sua lista de gravação está vazia</span>
               <p>Grave um vídeo e adicione a lista.</p>
             </Inform>
 
