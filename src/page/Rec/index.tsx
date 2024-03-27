@@ -1,22 +1,29 @@
-import {
-  Download,
-  DownloadSimple,
-  FloppyDisk,
-  Pause,
-  Play,
-  VideoCameraSlash,
-} from 'phosphor-react'
 import { useEffect, useRef, useState } from 'react'
 import {
+  Aside,
+  Buttons,
   Container,
+  ContainerPrinciapl,
+  ContainerVideo,
+  Footer,
   Header,
-  Inform,
-  ListZero,
+  InformList,
+  Informations,
   Main,
   PlayList,
   Status,
   VideoView,
 } from './style'
+
+import iconObs from '../../assets/obs.svg'
+import {
+  Broom,
+  DownloadSimple,
+  FloppyDisk,
+  Pause,
+  Play,
+  VideoCameraSlash,
+} from '@phosphor-icons/react'
 
 export function Recording() {
   const [isRecording, setIsRecording] = useState<boolean>(false)
@@ -24,26 +31,42 @@ export function Recording() {
   const [realTimeStream, setRealTimeStream] = useState<MediaStream | null>(null)
   const realTimeVideoRef = useRef<HTMLVideoElement>(null)
 
-  const [videoUrl, setVideoUrl] = useState<string | null>()
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
   const [mediaList, setMediaList] = useState<string[]>([])
-  const [recCount, setRecCount] = useState(0)
 
   useEffect(() => {
     if (mediaRecorder && realTimeVideoRef.current) {
       mediaRecorder.addEventListener('dataavailable', (e) => {
         const uri = URL.createObjectURL(e.data)
-        setVideoUrl(uri) // Atualiza o estado para a última gravação completa
+        setVideoUrl(uri)
       })
 
       realTime()
-
-      mediaRecorder.addEventListener('stop', () => {
-        setMediaRecorder(null)
-        setIsRecording(false)
-        setRecCount((prev) => prev + 1)
-      })
+      mediaRecorder.addEventListener('stop', handleMediaRecorderStop)
     }
   }, [mediaRecorder, isRecording])
+
+  function handleMediaRecorderStop() {
+    setIsRecording(false)
+  }
+
+  function stopRealTimeStream() {
+    if (realTimeStream) {
+      realTimeStream.getTracks().forEach((track) => {
+        track.stop()
+      })
+      setRealTimeStream(null)
+    }
+  }
+
+  function stopMediaRecord() {
+    if (mediaRecorder) {
+      mediaRecorder.stream.getTracks().forEach((track) => {
+        track.stop()
+      })
+      setMediaRecorder(null)
+    }
+  }
 
   function realTime() {
     navigator.mediaDevices
@@ -74,22 +97,23 @@ export function Recording() {
 
       media.start()
       setIsRecording(true)
+      setVideoUrl('')
     }
   }
 
   async function stop() {
     if (isRecording) {
-      mediaRecorder?.stop()
+      stopMediaRecord()
+      stopRealTimeStream()
     }
+    console.log(videoUrl)
   }
 
   function addToList() {
-    if (videoUrl && recCount <= 5) {
+    if (mediaList.length <= 5 && videoUrl !== null) {
       setMediaList([...mediaList, videoUrl])
       setVideoUrl(null)
-    }
-
-    if (recCount >= 5) {
+    } else {
       alert('Não é possível salvar mais de 5 gravações')
     }
   }
@@ -97,109 +121,123 @@ export function Recording() {
   return (
     <Container>
       <Header>
-        {isRecording === false ? (
-          <>
-            <button onClick={rec} title="Gravar tela">
-              <Play
-                size={24}
-                color="#ecf0f1"
-                alt="botão vermelho de play para poder gravar a tela"
-              />
-            </button>
-          </>
-        ) : (
-          <button onClick={stop} title="Para gravação">
-            <Pause
-              size={24}
-              color="#ecf0f1"
-              alt="botão para poder para a gravação"
-            />
-          </button>
-        )}
-
-        {recCount > 0 && (
-          <button onClick={addToList} title="Salvar gravação">
-            <FloppyDisk
-              size={24}
-              color="#ecf0f1"
-              alt="botão para poder salvar a gravação"
-            />
-          </button>
-        )}
+        <img src={iconObs} alt="Icone OBS Studio" />
+        <h3>OBS Web Studio</h3>
       </Header>
 
-      <Main>
-        {isRecording && (
-          <VideoView>
-            <video
-              ref={realTimeVideoRef}
-              autoPlay
-              muted
-              width={'400px'}
-            ></video>
-          </VideoView>
-        )}
+      <ContainerPrinciapl>
+        <Main>
+          <ContainerVideo>
+            {isRecording && (
+              <VideoView>
+                <video ref={realTimeVideoRef} autoPlay muted></video>
+              </VideoView>
+            )}
 
-        {videoUrl && (
-          <VideoView>
-            <video src={videoUrl} controls width={'400px'}></video>
-            <a
-              href={videoUrl}
-              download={'video.mp4'}
-              title="Downlaod sem salvar"
-            >
-              <DownloadSimple
-                size={32}
-                color="#ecf0f1"
-                alt="Botão para fazer downlaod antes de precisar adicionar a gravação na lista"
-              />
-            </a>
-          </VideoView>
-        )}
+            {videoUrl && (
+              <VideoView>
+                <video src={videoUrl} controls></video>
+              </VideoView>
+            )}
 
-        {recCount > 0 ? (
-          <PlayList>
-            <Status>
-              <span>List</span>
+            {videoUrl === null && isRecording === false && (
+              <Informations>
+                <VideoCameraSlash
+                  size={32}
+                  color="#424949"
+                  alt="Imagem que notifica que não possui nenhum vídeo na lista de gravações"
+                />
+                <div>
+                  <span>De o play e começe gravar sua tela</span>
+                </div>
+              </Informations>
+            )}
 
-              <span>{recCount} de 5</span>
-            </Status>
-
-            <ul>
-              {mediaList.map((item, index) => (
-                <li key={index}>
-                  <video src={item} controls></video>
-                  <a
-                    href={item}
-                    download={`video_${index + 1}.mp4`}
-                    title="Download vídeo"
-                  >
-                    <Download
+            <Buttons>
+              {isRecording === false ? (
+                <>
+                  <button onClick={rec} title="Gravar tela">
+                    <Play
                       size={24}
-                      color="#ecf0f1"
-                      alt="Botão para fazer o download do vídeo da gravação desejado, na lista de gravações"
-                    />{' '}
-                    Vídeo {index + 1}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </PlayList>
-        ) : (
-          <ListZero>
-            <Inform>
-              <span>Sua lista de gravação está vazia</span>
-              <p>Grave um vídeo e adicione a lista.</p>
-            </Inform>
+                      alt="botão vermelho de play para poder gravar a tela"
+                    />
+                  </button>
+                </>
+              ) : (
+                <button onClick={stop} title="Para gravação">
+                  <Pause size={24} alt="botão para poder para a gravação" />
+                </button>
+              )}
 
-            <VideoCameraSlash
-              size={32}
-              color="#424949"
-              alt="Imagem que notifica que não possui nenhum vídeo na lista de gravações"
-            />
-          </ListZero>
-        )}
-      </Main>
+              {videoUrl !== null ? (
+                <button onClick={addToList} title="Salvar gravação">
+                  <FloppyDisk
+                    size={24}
+                    alt="botão para poder salvar a gravação"
+                  />
+                </button>
+              ) : (
+                ''
+              )}
+            </Buttons>
+          </ContainerVideo>
+        </Main>
+
+        <Aside>
+          {mediaList.length !== 0 ? (
+            <PlayList>
+              <Status>
+                <span>Lista</span>
+
+                <span>{mediaList.length} de 5</span>
+              </Status>
+
+              <ul>
+                {mediaList.map((item, index) => (
+                  <li key={index}>
+                    <video src={item} controls></video>
+                    <a
+                      href={item}
+                      download={`video_${index + 1}.mp4`}
+                      title="Download vídeo"
+                    >
+                      Vídeo {index + 1}
+                      <DownloadSimple
+                        size={24}
+                        alt="Botão para fazer o download do vídeo da gravação desejado, na lista de gravações"
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </PlayList>
+          ) : (
+            <InformList>
+              <Informations>
+                <Broom
+                  size={32}
+                  color="#424949"
+                  alt="Imagem que notifica que não possui nenhum vídeo na lista de gravações"
+                />
+
+                <div>
+                  <span>Atualmente a lista está vazia</span>
+                </div>
+              </Informations>
+            </InformList>
+          )}
+        </Aside>
+      </ContainerPrinciapl>
+
+      <Footer>
+        <span>
+          Author: Gustavo Theotonio do canal{' '}
+          <a href="https://www.youtube.com/channel/UCcmc0yfcJR8LqYI-G2Ibg3w">
+            {' '}
+            Gustavo Theot
+          </a>
+        </span>
+      </Footer>
     </Container>
   )
 }

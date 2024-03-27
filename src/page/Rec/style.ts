@@ -5,131 +5,168 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+`
 
-  width: 70rem;
-  height: 100vh;
+export const ContainerPrinciapl = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 `
 
 export const Header = styled.header`
   display: flex;
-  flex-direction: row;
-  gap: 0.875rem;
-
-  button {
-    border: none;
-    border-radius: 8px;
-    background-color: #ee4b2b;
-
-    width: 4rem;
-    padding: 0.475rem;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-
-    cursor: pointer;
-  }
-`
-
-export const Main = styled.main`
-  display: flex;
   flex-direction: column;
-  gap: 2rem;
-`
-
-export const VideoView = styled.div`
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 1rem;
 
-  gap: 1.2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 
-  video {
-    border-radius: 8px;
-  }
-`
-
-export const PlayList = styled.div`
-  ul {
-    margin-top: 1rem;
-
-    width: 30rem;
-    height: 15.625rem;
-    overflow-y: scroll;
-
-    li {
-      list-style: none;
-
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 1rem;
-
-      video {
-        border: 1px solid #1b2631;
-        border-radius: 8px;
-
-        width: 12.5rem;
-      }
-
-      a {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        gap: 0.75rem;
-
-        text-decoration: none;
-        color: #ecf0f1;
-      }
+  img {
+    transition: transform 0.5s ease-in;
+    &:hover {
+      transform: rotate(360deg);
     }
   }
 `
 
-export const Status = styled.div`
+export const Main = styled.main`
+  width: 45rem;
+  height: 37rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  color: #ecf0f1;
+  justify-content: center;
+  align-items: center;
+`
+export const Aside = styled.aside`
+  width: 23rem;
 
-  h3 {
-    margin-bottom: 1rem;
-  }
+  height: 37rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+`
 
-  span:first-child {
-    font-size: 0.875rem;
-    font-weight: bold;
-  }
+export const ContainerVideo = styled.div`
+  width: 40rem;
+  height: 32rem;
 
-  span:last-child {
-    font-weight: bold;
-    padding: 0.125rem 0.5rem;
-    background-color: #283747;
-    border-radius: 999px;
-    text-align: center;
-    font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+`
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+export const VideoView = styled.div`
+  video {
+    width: 100%;
+    height: 27rem;
+    border-radius: 8px;
   }
 `
 
-export const ListZero = styled.div`
+export const Informations = styled.div`
+  height: 27rem;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  color: #656565;
+
+  svg {
+    color: #6e8097;
+  }
+`
+export const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    svg {
+      color: #66798f;
+    }
+
+    transition: 0.1s ease-in;
+
+    &:hover {
+      transform: scale(1.2);
+
+      svg {
+        color: #a3b7cc;
+      }
+    }
+  }
+`
+export const PlayList = styled.div`
+  padding: 2rem;
+  ul {
+    margin-top: 1rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      list-style: none;
+
+      video {
+        width: 7rem;
+        height: 4rem;
+        border-radius: 8px;
+      }
+
+      a {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        color: black;
+      }
+
+      &:hover {
+        border-radius: 8px;
+        background-color: #f2faff;
+      }
+    }
+  }
+`
+export const Status = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`
+export const InformList = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+
+  margin-top: 3.2rem;
 `
+export const Footer = styled.footer`
+  width: 100%;
 
-export const Inform = styled.div`
-  text-align: center;
+  display: flex;
+  justify-content: center;
 
-  color: #ecf0f1;
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 2rem;
 
-  p {
-    margin-top: 8px;
-    color: #424949;
+  span {
+    color: #a3b7cc;
   }
 `
