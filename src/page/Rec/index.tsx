@@ -36,15 +36,37 @@ export function Recording() {
 
   useEffect(() => {
     if (mediaRecorder && realTimeVideoRef.current) {
-      mediaRecorder.addEventListener('dataavailable', (e) => {
-        const uri = URL.createObjectURL(e.data)
-        setVideoUrl(uri)
-      })
-
       realTime()
-      mediaRecorder.addEventListener('stop', handleMediaRecorderStop)
     }
   }, [mediaRecorder, isRecording])
+
+  async function rec() {
+    if (!isRecording && navigator.mediaDevices) {
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          width: 1920,
+          height: 1080,
+          frameRate: 30,
+        },
+        audio: true,
+      })
+      const options = { mimeType: 'video/webm' }
+
+      const media = new MediaRecorder(stream, options)
+      media.addEventListener('dataavailable', handleDataAvaliable)
+      media.addEventListener('stop', handleMediaRecorderStop)
+      media.start()
+
+      setMediaRecorder(media)
+      setIsRecording(true)
+      setVideoUrl('')
+    }
+  }
+
+  function handleDataAvaliable(e) {
+    const uri = URL.createObjectURL(e.data)
+    setVideoUrl(uri)
+  }
 
   function handleMediaRecorderStop() {
     setIsRecording(false)
@@ -61,9 +83,7 @@ export function Recording() {
 
   function stopMediaRecord() {
     if (mediaRecorder) {
-      mediaRecorder.stream.getTracks().forEach((track) => {
-        track.stop()
-      })
+      mediaRecorder.stop()
       setMediaRecorder(null)
     }
   }
@@ -81,32 +101,11 @@ export function Recording() {
       })
   }
 
-  async function rec() {
-    if (!isRecording && navigator.mediaDevices) {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          width: 1920,
-          height: 1080,
-          frameRate: 30,
-        },
-        audio: true,
-      })
-
-      const media = new MediaRecorder(stream)
-      setMediaRecorder(media)
-
-      media.start()
-      setIsRecording(true)
-      setVideoUrl('')
-    }
-  }
-
   async function stop() {
     if (isRecording) {
       stopMediaRecord()
       stopRealTimeStream()
     }
-    console.log(videoUrl)
   }
 
   function addToList() {
